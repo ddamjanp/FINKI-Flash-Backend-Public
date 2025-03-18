@@ -9,7 +9,7 @@
     <li>Vladimir Kambovski</li>
     <li>Dimitar Vergov</li>
     <li>Damjan Pushkovski</li>
-    <li>Hristijan Ilievski</li>
+    <li>Filip Ilievski</li>
     <li>Bojana Markovska</li>
     <li>Sara Kirovska</li>
     <li>Petar Kiceski</li>
