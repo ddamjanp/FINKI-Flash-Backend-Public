@@ -3,9 +3,8 @@ package com.flash.finki.request;
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class VerificationRequest {
     private String email;
 
-    private String password;
+    private String verificationCode;
 }
-

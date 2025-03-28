@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -25,6 +27,21 @@ public class User {
     private String password;
 
     private USER_ROLE role = USER_ROLE.USER;
+
+    private boolean enabled = false;
+
+    @Column(name = "verification_code")
+    private String verificationCode;
+
+    @Column(name = "verification_expiration")
+    private LocalDateTime verificationExpiration;
+
+    @Column(name = "reset_password_code")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String resetPasswordCode;
+
+    @Column(name = "reset_password_expiration")
+    private LocalDateTime resetPasswordExpiration;
 
     public User(String fullName, String email, String password, USER_ROLE role) {
         this.fullName = fullName;

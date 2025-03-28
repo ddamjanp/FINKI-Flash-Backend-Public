@@ -19,7 +19,6 @@ public class JwtTokenProvider {
     private SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
 
     public String generateToken(Authentication authentication) {
-
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String roles = populateAuthorities(authorities);
 
@@ -34,7 +33,6 @@ public class JwtTokenProvider {
     }
 
     public String getEmailFromJwtToken(String jwt){
-
         jwt = jwt.substring(7);
 
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
@@ -45,7 +43,6 @@ public class JwtTokenProvider {
     }
 
     private String populateAuthorities(Collection<? extends GrantedAuthority> authorities) {
-
         Set<String> auths = new HashSet<>();
 
         for(GrantedAuthority authority:authorities){
