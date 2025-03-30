@@ -47,7 +47,7 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws Exception {
         User isEmailExist = userRepository.findByEmail(user.getEmail());
 
@@ -85,7 +85,7 @@ public class AuthController {
         return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
 
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public ResponseEntity<AuthResponse> signIn(@RequestBody LoginRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
