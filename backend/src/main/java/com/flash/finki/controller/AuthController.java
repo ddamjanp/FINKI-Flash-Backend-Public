@@ -38,8 +38,8 @@ public class AuthController {
     private final UserServiceImpl userService;
 
     public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                          JwtTokenProvider jwtTokenProvider,
-                          CustomUserDetailsService customUserDetailsService, UserServiceImpl userService) {
+            JwtTokenProvider jwtTokenProvider,
+            CustomUserDetailsService customUserDetailsService, UserServiceImpl userService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -110,6 +110,36 @@ public class AuthController {
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
+    @PostMapping("/admin/login")
+    public ResponseEntity<AuthResponse> adminSignIn(@RequestBody LoginRequest request) {
+        String email = request.getEmail();
+        String password = request.getPassword();
+
+        Authentication authentication = authenticate(email, password);
+
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        String role = authorities.isEmpty() ? null : authorities.iterator().next().getAuthority();
+
+        // Remove ROLE_ prefix if present before converting to enum
+        if (role != null && role.startsWith("ROLE_")) {
+            role = role.substring(5);
+        }
+
+        // Check if the user is an admin
+        if (!role.equals("ADMIN")) {
+            throw new BadCredentialsException("Access denied. Admin privileges required.");
+        }
+
+        String jwt = jwtTokenProvider.generateToken(authentication);
+
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setJwt(jwt);
+        authResponse.setMessage("Admin login success!");
+        authResponse.setRole(USER_ROLE.ADMIN);
+
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    }
+
     private Authentication authenticate(String email, String password) {
         try {
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
@@ -139,4 +169,3 @@ public class AuthController {
         return String.valueOf(code);
     }
 }
-
