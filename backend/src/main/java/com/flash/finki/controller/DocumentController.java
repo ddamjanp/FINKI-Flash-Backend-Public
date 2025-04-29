@@ -17,13 +17,12 @@ public class DocumentController {
     private final PDFTextExtractorService pdfExtractorService;
     private final QuestionGenerationService questionGenerationService;
 
-    private static final String UPLOAD_DIR = "./backend/uploads"; 
+    private static final String UPLOAD_DIR = "uploads";
 
     @PostMapping("/process")
     @SneakyThrows
     public ResponseEntity<DocumentUploadResponse> processUploadedDocument(
-            @RequestParam("filename") String filename
-    ) {
+            @RequestParam("filename") String filename) {
         File file = new File(UPLOAD_DIR, filename);
         if (!file.exists() || !file.isFile()) {
             DocumentUploadResponse response = new DocumentUploadResponse();
@@ -32,7 +31,7 @@ public class DocumentController {
             response.setQuestions(null);
             return ResponseEntity.badRequest().body(response);
         }
-        
+
         String extractedText = pdfExtractorService.extractTextFromPDF(file);
 
         var questions = questionGenerationService.generateQuestions(extractedText);

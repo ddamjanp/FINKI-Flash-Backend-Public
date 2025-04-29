@@ -32,8 +32,12 @@ public class QuestionGenerationService {
             CompletionRequest completionRequest = CompletionRequest.builder()
                     .model("gpt-3.5-turbo-instruct")
                     .prompt(generatePrompt(documentText))
-                    .maxTokens(1000)
-                    .temperature(0.7)
+                    .maxTokens(2000)
+                    .temperature(0.3) // Lower temperature for more consistent output
+                    .topP(1.0)
+                    .frequencyPenalty(0.0)
+                    .presencePenalty(0.0)
+                    .stop(null) // No stop sequence
                     .build();
 
             CompletionResult result = service.createCompletion(completionRequest);
@@ -49,42 +53,61 @@ public class QuestionGenerationService {
     }
 
     private String generatePrompt(String text) {
-        return "Please generate exactly 5 multiple-choice questions about the following text. " +
-        "ALWAYS answer in English and translate the text to English if necessary. " +
-        "The correct answer must ALWAYS be the first option (Option A). " +
-        "Return ONLY a valid JSON array, and NOTHING else — no explanations, no notes, no markdown formatting like ```json.\n\n" +
-        "Provide the response in the EXACT JSON format shown below:\n\n" +
+        return "You are a quiz generator. Generate exactly 5 multiple-choice questions about the following text. " +
+                "Follow these STRICT requirements:\n" +
+                "1. Return ONLY a valid JSON array\n" +
+                "2. Each question MUST have exactly 4 options\n" +
+                "3. The first option (index 0) MUST be the correct answer\n" +
+                "4. Do not include 'Option A:', 'Option B:', etc. in the options\n" +
+                "5. Do not add any explanation or notes\n" +
+                "6. Ensure the JSON is properly formatted with no trailing commas\n\n" +
+                "Required JSON format:\n" +
                 "[\n" +
                 "  {\n" +
-                "    \"question\": \"Example question text?\",\n" +
-                "    \"options\": [\"Option A\", \"Option B\", \"Option C\", \"Option D\"],\n" +
+                "    \"question\": \"What is the example question?\",\n" +
+                "    \"options\": [\"Correct answer\", \"Wrong answer 1\", \"Wrong answer 2\", \"Wrong answer 3\"]\n" +
                 "  }\n" +
                 "]\n\n" +
-                "TEXT TO GENERATE QUESTIONS FROM:\n" + text;
+                "Text to generate questions from:\n\n" + text + "\n\n" +
+                "Remember: Return ONLY the JSON array with exactly 5 questions, each with exactly 4 options.";
     }
-    
 
     private List<QuizQuestion> parseQuestionsFromResponse(String responseText) {
         try {
-            int startIndex = responseText.indexOf('[');
-            int endIndex = responseText.lastIndexOf(']') + 1;
+            // Clean up the response text to ensure valid JSON
+            String cleanedResponse = responseText.trim()
+                    .replaceAll("```json\\s*", "") // Remove any markdown code block indicators
+                    .replaceAll("```\\s*", "") // Remove ending markdown indicators
+                    .replaceAll("Option [A-D]:\\s*", "") // Remove option prefixes
+                    .replaceAll(",\\s*}", "}") // Remove trailing commas before closing braces
+                    .replaceAll(",\\s*]", "]"); // Remove trailing commas before closing brackets
+
+            int startIndex = cleanedResponse.indexOf('[');
+            int endIndex = cleanedResponse.lastIndexOf(']') + 1;
 
             if (startIndex == -1 || endIndex == -1) {
-                return convertTextToQuestions(responseText);
+                log.error("Invalid JSON format - missing brackets. Response: {}", cleanedResponse);
+                return new ArrayList<>();
             }
 
-            String jsonContent = responseText.substring(startIndex, endIndex);
-            log.info("Json content: {}", jsonContent);
+            String jsonContent = cleanedResponse.substring(startIndex, endIndex);
+            log.info("Cleaned Json content: {}", jsonContent);
 
             List<QuizQuestion> questions = objectMapper.readValue(
                     jsonContent,
-                    new TypeReference<List<QuizQuestion>>(){}
-            );
+                    new TypeReference<List<QuizQuestion>>() {
+                    });
+
+            // Validate questions
+            if (questions.size() != 5) {
+                log.error("Invalid number of questions: {}", questions.size());
+                return new ArrayList<>();
+            }
 
             return questions;
         } catch (Exception e) {
-            log.error("Failed to parse JSON, converting text to questions", e);
-            return convertTextToQuestions(responseText);
+            log.error("Failed to parse JSON: {}", e.getMessage());
+            return new ArrayList<>();
         }
     }
 
