@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// FlashcardController.java
 @RestController
 @RequestMapping("/api/flashcards")
 public class FlashcardController {
@@ -14,13 +15,13 @@ public class FlashcardController {
     @Autowired
     private FlashcardService flashcardService;
 
-
     @PostMapping("/generate/{aiOutputId}")
-    public List<Flashcard> generateFlashcards(@PathVariable Long aiOutputId,
-                                              @RequestParam Long userId) {
+    public Flashcard generateFlashcard( // Changed to singular return type
+                                        @PathVariable Long aiOutputId, // Changed to UUID
+                                        @RequestParam Long userId      // Changed to UUID
+    ) {
         return flashcardService.generateFromAIOutput(aiOutputId, userId);
     }
-
 
     @GetMapping("/search")
     public List<Flashcard> search(@RequestParam String query) {

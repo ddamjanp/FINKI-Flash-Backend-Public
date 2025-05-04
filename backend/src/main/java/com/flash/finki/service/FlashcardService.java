@@ -25,13 +25,12 @@ public class FlashcardService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Flashcard> generateFromAIOutput(Long aiOutputId, Long userId) {
+    public Flashcard generateFromAIOutput(Long aiOutputId, Long userId) { // Changed to UUID
         AIOutput aiOutput = aiOutputRepository.findById(aiOutputId)
                 .orElseThrow(() -> new RuntimeException("AIOutput not found"));
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
 
         Flashcard flashcard = new Flashcard(
                 user,
@@ -40,7 +39,7 @@ public class FlashcardService {
                 aiOutput.getCorrectAnswer()
         );
 
-        return List.of(flashcardRepository.save(flashcard));
+        return flashcardRepository.save(flashcard);
     }
 
     public List<Flashcard> searchFlashcards(String query) {
