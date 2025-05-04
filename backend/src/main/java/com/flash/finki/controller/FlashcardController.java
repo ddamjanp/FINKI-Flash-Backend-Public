@@ -16,9 +16,9 @@ public class FlashcardController {
     private FlashcardService flashcardService;
 
     @PostMapping("/generate/{aiOutputId}")
-    public Flashcard generateFlashcard( // Changed to singular return type
-                                        @PathVariable Long aiOutputId, // Changed to UUID
-                                        @RequestParam Long userId      // Changed to UUID
+    public Flashcard generateFlashcard(
+                                        @PathVariable Long aiOutputId,
+                                        @RequestParam Long userId
     ) {
         return flashcardService.generateFromAIOutput(aiOutputId, userId);
     }

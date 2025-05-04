@@ -25,7 +25,7 @@ public class FlashcardService {
     @Autowired
     private UserRepository userRepository;
 
-    public Flashcard generateFromAIOutput(Long aiOutputId, Long userId) { // Changed to UUID
+    public Flashcard generateFromAIOutput(Long aiOutputId, Long userId) {
         AIOutput aiOutput = aiOutputRepository.findById(aiOutputId)
                 .orElseThrow(() -> new RuntimeException("AIOutput not found"));
 
