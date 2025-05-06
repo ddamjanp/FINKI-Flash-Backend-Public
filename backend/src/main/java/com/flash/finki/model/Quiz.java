@@ -22,6 +22,10 @@ public class Quiz {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "file_id")
+    private File file;
+
     @Column(nullable = false)
     private String title;
 
