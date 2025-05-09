@@ -4,6 +4,7 @@ package com.flash.finki.controller;
 import com.flash.finki.model.QuizAttempt;
 import com.flash.finki.model.dto.QuizAttemptAnswerDTO;
 import com.flash.finki.model.dto.QuizAttemptDTO;
+import com.flash.finki.model.dto.QuizAttemptSummaryDTO;
 import com.flash.finki.model.dto.StartQuizAttemptRequestDTO;
 import com.flash.finki.service.QuizAttemptService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class QuizAttemptController {
     }
 
     @GetMapping("/quiz/{quizId}/user/{userId}")
-    public ResponseEntity<List<QuizAttempt>> getAttempts(@PathVariable Long quizId, @PathVariable Long userId) {
+    public ResponseEntity<List<QuizAttemptSummaryDTO>> getAttempts(@PathVariable Long quizId, @PathVariable Long userId) {
         return ResponseEntity.ok(attemptService.getAttemptsForQuiz(quizId, userId));
     }
 

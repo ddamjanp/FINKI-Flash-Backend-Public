@@ -3,6 +3,7 @@ package com.flash.finki.service.impl;
 import com.flash.finki.model.*;
 import com.flash.finki.model.dto.QuizAttemptAnswerDTO;
 import com.flash.finki.model.dto.QuizAttemptDTO;
+import com.flash.finki.model.dto.QuizAttemptSummaryDTO;
 import com.flash.finki.repository.*;
 import com.flash.finki.service.QuizAttemptService;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -33,16 +35,24 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
         attempt.setQuiz(quiz);
         attempt.setUser(user);
         attempt.setAttemptedAt(LocalDateTime.now());
-        attempt.setScore(null);
+        attempt.setScore(0);
         attempt.setAnswers(new ArrayList<>());
 
         return attemptRepository.save(attempt);
     }
 
     @Override
-    public List<QuizAttempt> getAttemptsForQuiz(Long quizId, Long userId) {
-        return attemptRepository.findByQuizIdAndUserId(quizId, userId);
+    public List<QuizAttemptSummaryDTO> getAttemptsForQuiz(Long quizId, Long userId) {
+        List<QuizAttempt> quizAttempts = attemptRepository.findByQuizIdAndUserId(quizId, userId);
 
+        return quizAttempts.stream()
+                .map(attempt -> new QuizAttemptSummaryDTO(
+                        attempt.getId(),
+                        attempt.getQuiz().getTitle(),
+                        attempt.getScore(),
+                        attempt.getAttemptedAt()
+                ))
+                .collect(Collectors.toList());
         // TODO: implement the best and most secure method
         // return attemptRepository.findByQuizId(quizId);
         // return attemptRepository.findByUserId(quizId);
@@ -50,7 +60,7 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
 
     @Override
     public QuizAttemptDTO submitAttempt(Long attemptId, List<QuizAttemptAnswerDTO> submittedAnswers) {
-        QuizAttempt attempt = attemptRepository.findById(attemptId)
+        QuizAttempt attempt = attemptRepository.    findById(attemptId)
                 .orElseThrow(() -> new IllegalArgumentException("Attempt not found"));
 
         int total = 0;
