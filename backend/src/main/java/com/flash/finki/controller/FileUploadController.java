@@ -1,48 +1,72 @@
 package com.flash.finki.controller;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import org.springframework.http.HttpStatus;
+import com.flash.finki.model.DocumentUploadResponse;
+import com.flash.finki.model.File;
+import com.flash.finki.model.User;
+import com.flash.finki.repository.FileRepository;
+import com.flash.finki.repository.UserRepository;
+import com.flash.finki.service.DocumentProcessingService;
+import com.flash.finki.service.PDFTextExtractorService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/files")
+@RequiredArgsConstructor
 public class FileUploadController {
 
-    private static final String UPLOAD_DIR = "uploads";
+    private final FileRepository fileRepository;
+    private final UserRepository userRepository;
+    private final PDFTextExtractorService pdfExtractorService;
+    private final DocumentProcessingService documentProcessingService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    @Transactional
+    public ResponseEntity<String> uploadFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("userId") Long userId) throws IOException {
+
         String fileName = file.getOriginalFilename();
         if (!isValidFileExtension(fileName)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid file type. Only PDF, CSV, and TXT files are allowed.");
+            return ResponseEntity.badRequest().body("Invalid file type");
         }
 
-        String sanitizedFileName = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-]", "_");
+        String sanitizedFileName = fileName.replaceAll("[^a-zA-Z0-9.-]", "_");
 
-        try {
-            Path uploadDirectory = Paths.get(UPLOAD_DIR);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-            if (!Files.exists(uploadDirectory)) {
-                Files.createDirectories(uploadDirectory);
-            }
+        File dbFile = new File();
+        dbFile.setFilename(sanitizedFileName);
+        dbFile.setUser(user);
+        dbFile.setFileType(resolveFileType(sanitizedFileName));
+        dbFile.setUploadedAt(LocalDateTime.now());
+        dbFile.setFileUrl("IN_MEMORY_UPLOAD");
 
-            Path targetLocation = uploadDirectory.resolve(sanitizedFileName);
-            uploadFileWithProgress(file, targetLocation);
+        fileRepository.save(dbFile);
 
-            return ResponseEntity.ok("File uploaded successfully: " + sanitizedFileName);
+        return ResponseEntity.ok("File metadata saved successfully.");
+    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to upload file: " + e.getMessage());
-        }
+    @PostMapping("/process")
+    public ResponseEntity<DocumentUploadResponse> processFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("filename") String filename) throws IOException {
+
+        // For security
+        File dbFile = fileRepository.findByFilename(filename)
+                .orElseThrow(() -> new IllegalArgumentException("File not found in DB"));
+
+        String extractedText = documentProcessingService.extractTextFromPDF(file.getInputStream());
+        DocumentUploadResponse response = documentProcessingService.processUploadedText(dbFile, extractedText);
+
+        return ResponseEntity.ok(response);
     }
 
     private boolean isValidFileExtension(String fileName) {
@@ -55,22 +79,13 @@ public class FileUploadController {
         return index > 0 ? fileName.substring(index + 1) : "";
     }
 
-    private void uploadFileWithProgress(MultipartFile file, Path targetLocation) throws IOException {
-        byte[] buffer = new byte[4096]; // Buffer for reading the file
-        long totalBytes = file.getSize();
-        long bytesRead = 0;
-
-        try (var inputStream = file.getInputStream()) {
-            try (var outputStream = Files.newOutputStream(targetLocation)) {
-                int read;
-                while ((read = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, read);
-                    bytesRead += read;
-
-                    double progress = ((double) bytesRead / totalBytes) * 100;
-                    System.out.println("Upload Progress: " + String.format("%.2f", progress) + "%");
-                }
-            }
-        }
+    private File.FileType resolveFileType(String fileName) {
+        String extension = getFileExtension(fileName).toLowerCase();
+        return switch (extension) {
+            case "pdf" -> File.FileType.PDF;
+            case "docx" -> File.FileType.DOCX;
+            case "txt" -> File.FileType.TXT;
+            default -> throw new IllegalArgumentException("Unsupported file type: " + extension);
+        };
     }
 }
