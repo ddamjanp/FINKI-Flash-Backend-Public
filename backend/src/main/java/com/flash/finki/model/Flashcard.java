@@ -16,6 +16,12 @@ public class Flashcard {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_id")
+    private File file;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -39,5 +45,6 @@ public class Flashcard {
         this.aiOutput = aiOutput;
         this.question = question;
         this.correctAnswer = correctAnswer;
+        this.file= file;
     }
 }

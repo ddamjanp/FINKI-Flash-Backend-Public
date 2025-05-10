@@ -6,24 +6,18 @@ import com.flash.finki.model.User;
 import com.flash.finki.repository.AIOutputRepository;
 import com.flash.finki.repository.FlashcardRepository;
 import com.flash.finki.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class FlashcardService {
 
-    @Autowired
-    private FlashcardRepository flashcardRepository;
-
-    @Autowired
-    private AIOutputRepository aiOutputRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    private final FlashcardRepository flashcardRepository;
+    private final AIOutputRepository aiOutputRepository;
+    private final UserRepository userRepository;
 
     public Flashcard generateFromAIOutput(Long aiOutputId, Long userId) {
         AIOutput aiOutput = aiOutputRepository.findById(aiOutputId)
@@ -31,6 +25,10 @@ public class FlashcardService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (aiOutput.getQuestion() == null || aiOutput.getCorrectAnswer() == null) {
+            throw new RuntimeException("AIOutput is missing question or answer");
+        }
 
         Flashcard flashcard = new Flashcard(
                 user,
@@ -45,5 +43,13 @@ public class FlashcardService {
     public List<Flashcard> searchFlashcards(String query) {
         return flashcardRepository.findByQuestionContainingIgnoreCase(query);
     }
-}
 
+    public List<Flashcard> getFlashcardsByFile(Long aiOutputId) {
+        return flashcardRepository.findByAiOutputId(aiOutputId);
+    }
+
+    public Flashcard getFlashcardById(Long id) {
+        return flashcardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Flashcard not found"));
+    }
+}
