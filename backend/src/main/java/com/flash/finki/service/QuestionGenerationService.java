@@ -1,6 +1,6 @@
 package com.flash.finki.service;
 
-import com.flash.finki.model.QuizQuestion;
+import com.flash.finki.model.AIOutput;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theokanning.openai.completion.CompletionRequest;
@@ -25,7 +25,7 @@ public class QuestionGenerationService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public List<QuizQuestion> generateQuestions(String documentText) {
+    public List<AIOutput> generateQuestions(String documentText) {
         try {
             OpenAiService service = new OpenAiService(apiKey, Duration.ofSeconds(30));
 
@@ -72,7 +72,7 @@ public class QuestionGenerationService {
                 "Remember: Return ONLY the JSON array with exactly 5 questions, each with exactly 4 options.";
     }
 
-    private List<QuizQuestion> parseQuestionsFromResponse(String responseText) {
+    private List<AIOutput> parseQuestionsFromResponse(String responseText) {
         try {
             // Clean up the response text to ensure valid JSON
             String cleanedResponse = responseText.trim()
@@ -93,38 +93,38 @@ public class QuestionGenerationService {
             String jsonContent = cleanedResponse.substring(startIndex, endIndex);
             log.info("Cleaned Json content: {}", jsonContent);
 
-            List<QuizQuestion> questions = objectMapper.readValue(
+            List<AIOutput> aiOutputs = objectMapper.readValue(
                     jsonContent,
-                    new TypeReference<List<QuizQuestion>>() {
+                    new TypeReference<List<AIOutput>>() {
                     });
 
             // Validate questions
-            if (questions.size() != 5) {
-                log.error("Invalid number of questions: {}", questions.size());
+            if (aiOutputs.size() != 5) {
+                log.error("Invalid number of questions: {}", aiOutputs.size());
                 return new ArrayList<>();
             }
 
-            return questions;
+            return aiOutputs;
         } catch (Exception e) {
             log.error("Failed to parse JSON: {}", e.getMessage());
             return new ArrayList<>();
         }
     }
 
-    private List<QuizQuestion> convertTextToQuestions(String text) {
+    private List<AIOutput> convertTextToQuestions(String text) {
         String[] questionTexts = text.split("\n\n");
 
         return new ArrayList<>(List.of(questionTexts)).stream()
                 .filter(q -> q.contains("?"))
-                .map(this::convertSingleQuestionToQuizQuestion)
+                .map(this::convertSingleQuestionToAIOutput)
                 .collect(Collectors.toList());
     }
 
-    private QuizQuestion convertSingleQuestionToQuizQuestion(String questionText) {
-        QuizQuestion quizQuestion = new QuizQuestion();
+    private AIOutput convertSingleQuestionToAIOutput(String questionText) {
+        AIOutput aiOutput = new AIOutput();
 
         int questionIndex = questionText.indexOf("?");
-        quizQuestion.setQuestion(questionText.substring(0, questionIndex + 1).trim());
+        aiOutput.setQuestion(questionText.substring(0, questionIndex + 1).trim());
 
         // Extract options
         String[] lines = questionText.split("\n");
@@ -142,9 +142,9 @@ public class QuestionGenerationService {
             }
         }
 
-        quizQuestion.setCorrectAnswer(correctAnswer);
-        quizQuestion.setOptions(options);
+        aiOutput.setCorrectAnswer(correctAnswer);
+        aiOutput.setOptions(options);
 
-        return quizQuestion;
+        return aiOutput;
     }
 }

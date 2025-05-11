@@ -25,23 +25,24 @@ public class DocumentController {
             @RequestParam("filename") String filename) {
         File file = new File(UPLOAD_DIR, filename);
         if (!file.exists() || !file.isFile()) {
-            DocumentUploadResponse response = new DocumentUploadResponse();
-            response.setDocumentName("File not found: " + filename);
-            response.setTotalQuestions(0);
-            response.setQuestions(null);
-            return ResponseEntity.badRequest().body(response);
+//            DocumentUploadResponse response = new DocumentUploadResponse();
+//            response.setDocumentName("File not found: " + filename);
+//            response.setTotalQuestions(0);
+//            response.setQuestions(null);
+//            return ResponseEntity.badRequest().body(response);
         }
 
         String extractedText = pdfExtractorService.extractTextFromPDF(file);
 
         var questions = questionGenerationService.generateQuestions(extractedText);
 
-        DocumentUploadResponse response = new DocumentUploadResponse();
-        response.setDocumentName(filename);
-        response.setQuestions(questions);
-        response.setTotalQuestions(questions.size());
-        System.out.println(response);
+//        DocumentUploadResponse response = new DocumentUploadResponse();
+//        response.setDocumentName(filename);
+//        response.setQuestions(questions);
+//        response.setTotalQuestions(questions.size());
+//        System.out.println(response);
 
-        return ResponseEntity.ok(response);
+//        return ResponseEntity.ok(response);
+        return null;
     }
 }

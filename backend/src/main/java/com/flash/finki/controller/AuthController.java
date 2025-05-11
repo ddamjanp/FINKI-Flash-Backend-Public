@@ -60,17 +60,18 @@ public class AuthController {
         createdUser.setEmail(user.getEmail());
         createdUser.setPassword(passwordEncoder.encode(user.getPassword()));
         createdUser.setRole(user.getRole());
-        createdUser.setEnabled(false);
+        //createdUser.setEnabled(false);
+        createdUser.setEnabled(true);
 
         // Generate verification code
         String verificationCode = generateVerificationCode();
-        createdUser.setVerificationCode(verificationCode);
-        createdUser.setVerificationExpiration(LocalDateTime.now().plusMinutes(15));
+        //createdUser.setVerificationCode(verificationCode);
+        //createdUser.setVerificationExpiration(LocalDateTime.now().plusMinutes(15));
 
         User savedUser = userRepository.save(createdUser);
 
         // Send verification email
-        userService.resendVerificationCode(savedUser.getEmail());
+        //userService.resendVerificationCode(savedUser.getEmail());
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
