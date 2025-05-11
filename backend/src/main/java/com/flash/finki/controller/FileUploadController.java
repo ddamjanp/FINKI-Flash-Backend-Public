@@ -1,25 +1,38 @@
 package com.flash.finki.controller;
 
-import com.flash.finki.model.DocumentUploadResponse;
-import com.flash.finki.model.File;
-import com.flash.finki.model.User;
+import org.slf4j.Logger;
+import com.flash.finki.model.*;
 import com.flash.finki.repository.FileRepository;
 import com.flash.finki.repository.UserRepository;
 import com.flash.finki.service.DocumentProcessingService;
+import com.flash.finki.service.FlashcardService;
 import com.flash.finki.service.PDFTextExtractorService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+
+
 
 @RestController
 @RequestMapping("/files")
 @RequiredArgsConstructor
 public class FileUploadController {
+
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(FileUploadController.class);
+
+    @Autowired
+    private FlashcardService flashcardService;
+
 
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
@@ -63,8 +76,25 @@ public class FileUploadController {
         File dbFile = fileRepository.findByFilename(filename)
                 .orElseThrow(() -> new IllegalArgumentException("File not found in DB"));
 
+        Long userId = dbFile.getUser().getId();
+
         String extractedText = documentProcessingService.extractTextFromPDF(file.getInputStream());
         DocumentUploadResponse response = documentProcessingService.processUploadedText(dbFile, extractedText);
+
+        List<AIOutput> list = response.getQuestions();
+
+        List<Flashcard> flashcards = new ArrayList<>();
+        for (AIOutput output : list) {
+
+            try {
+                Flashcard flashcard = flashcardService.generateFromAIOutput(output.getId(), userId);
+                flashcards.add(flashcard);
+            } catch (Exception e) {
+                log.error("Error generating flashcard for AIOutput:"+ output.getId(), e);
+            }
+
+        }
+
 
         return ResponseEntity.ok(response);
     }
