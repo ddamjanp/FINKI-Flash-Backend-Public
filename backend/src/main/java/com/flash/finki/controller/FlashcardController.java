@@ -1,6 +1,7 @@
 package com.flash.finki.controller;
 
 import com.flash.finki.model.Flashcard;
+import com.flash.finki.model.dto.FlashcardDTO;
 import com.flash.finki.service.FlashcardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +20,9 @@ public class FlashcardController {
         this.flashcardService = flashcardService;
     }
 
-    @PostMapping("/generate/{aiOutputId}")
-    public ResponseEntity<Flashcard> generateFlashcard(
-            @PathVariable Long aiOutputId,
-            @RequestParam Long userId) {
-        Flashcard flashcard = flashcardService.generateFromAIOutput(aiOutputId, userId);
-        return ResponseEntity.ok(flashcard);
-    }
-
     @GetMapping("/search")
-    public ResponseEntity<List<Flashcard>> search(@RequestParam String query) {
-        List<Flashcard> flashcards = flashcardService.searchFlashcards(query);
+    public ResponseEntity<List<FlashcardDTO>> search(@RequestParam String query) {
+        List<FlashcardDTO> flashcards = flashcardService.searchFlashcards(query);
         return ResponseEntity.ok(flashcards);
     }
 

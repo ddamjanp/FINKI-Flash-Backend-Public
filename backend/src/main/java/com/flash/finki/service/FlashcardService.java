@@ -1,8 +1,10 @@
 package com.flash.finki.service;
 
 import com.flash.finki.model.AIOutput;
+import com.flash.finki.model.File;
 import com.flash.finki.model.Flashcard;
 import com.flash.finki.model.User;
+import com.flash.finki.model.dto.FlashcardDTO;
 import com.flash.finki.repository.AIOutputRepository;
 import com.flash.finki.repository.FlashcardRepository;
 import com.flash.finki.repository.UserRepository;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,22 +33,42 @@ public class FlashcardService {
             throw new RuntimeException("AIOutput is missing question or answer");
         }
 
+        File file = aiOutput.getFile();
+        if (file == null) {
+            throw new RuntimeException("AIOutput is not associated with a file");
+        }
+
+
         Flashcard flashcard = new Flashcard(
                 user,
                 aiOutput,
                 aiOutput.getQuestion(),
                 aiOutput.getCorrectAnswer()
         );
+        flashcard.setFile(file);
 
         return flashcardRepository.save(flashcard);
     }
 
-    public List<Flashcard> searchFlashcards(String query) {
-        return flashcardRepository.findByQuestionContainingIgnoreCase(query);
+    public List<FlashcardDTO> searchFlashcards(String query) {
+       List<Flashcard> flashcards = flashcardRepository.findByQuestionContainingIgnoreCase(query);
+        return flashcards.stream()
+                .map(flashcard -> new FlashcardDTO(
+                        flashcard.getId(),
+                        flashcard.getQuestion(),
+                        flashcard.getCorrectAnswer(),
+                        flashcard.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
+
     }
 
+
+
+
+
     public List<Flashcard> getFlashcardsByFile(Long aiOutputId) {
-        return flashcardRepository.findByAiOutputId(aiOutputId);
+        return flashcardRepository.findByFileId(aiOutputId);
     }
 
     public Flashcard getFlashcardById(Long id) {
