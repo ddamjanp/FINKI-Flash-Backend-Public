@@ -9,5 +9,7 @@ import java.util.List;
 public interface AIOutputRepository extends JpaRepository<AIOutput, Long> {
     AIOutput findByFile(File file);
 
+    List<AIOutput> findAllByFileId(Long id);
+
     List<AIOutput> findByFileId(Long fileId);
 }
