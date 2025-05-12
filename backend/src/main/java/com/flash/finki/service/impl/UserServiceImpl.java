@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
                     + "</div>"
                     + "<p>This code will expire in 15 minutes.</p>"
                     + "<p>If you didn't request a password reset, please ignore this email or contact support if you have concerns.</p>"
-                    + "<p>Regards,<br/>Your Application Team</p>"
+                    + "<p>Regards,<br/>FINKI Flash Team</p>"
                     + "</div>";
 
             emailService.sendEmail(user.getEmail(), subject, content);
@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
                     + "</div>"
                     + "<p>This code will expire in 15 minutes.</p>"
                     + "<p>If you didn't create an account, please ignore this email.</p>"
-                    + "<p>Regards,<br/>Your Application Team</p>"
+                    + "<p>Regards,<br/>FINKI Flash Team</p>"
                     + "</div>";
 
             emailService.sendEmail(user.getEmail(), subject, content);

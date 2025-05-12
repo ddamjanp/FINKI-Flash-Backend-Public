@@ -20,6 +20,7 @@ uploads/
 *.iml
 *.ipr
 .env
+application-prod.properties
 
 ### NetBeans ###
 /nbproject/private/

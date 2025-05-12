@@ -30,8 +30,6 @@ public class AppConfig {
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
                         .requestMatchers("/auth/verification/**").permitAll()
                         .requestMatchers("/auth/password/**").permitAll()
-                        // [dh]NOTE: The api/** requests won't work locally. 
-                        //   A .permitAll() solves it temporarily
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll())
                 .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)

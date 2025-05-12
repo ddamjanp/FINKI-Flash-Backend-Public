@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 
+// METHOD NOT IN USE - DELETE LATER
+
 @RestController
 @RequestMapping("/api/documents")
 @RequiredArgsConstructor

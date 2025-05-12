@@ -11,7 +11,6 @@ import com.flash.finki.service.QuestionGenerationService;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.springframework.javapoet.JavaFile;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;

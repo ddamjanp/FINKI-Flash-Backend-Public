@@ -1,6 +1,5 @@
 package com.flash.finki.controller;
 
-
 import com.flash.finki.model.Quiz;
 import com.flash.finki.model.dto.GenerateQuizRequestDTO;
 import com.flash.finki.service.impl.QuizServiceImpl;

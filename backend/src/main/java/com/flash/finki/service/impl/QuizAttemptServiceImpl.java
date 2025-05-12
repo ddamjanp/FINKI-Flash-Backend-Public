@@ -53,9 +53,6 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
                         attempt.getAttemptedAt()
                 ))
                 .collect(Collectors.toList());
-        // TODO: implement the best and most secure method
-        // return attemptRepository.findByQuizId(quizId);
-        // return attemptRepository.findByUserId(quizId);
     }
 
     @Override
@@ -108,5 +105,4 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
         dto.setAnswers(dtoAnswers);
         return dto;
     }
-
 }
