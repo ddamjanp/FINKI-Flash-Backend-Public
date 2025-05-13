@@ -63,10 +63,6 @@ public class FlashcardService {
 
     }
 
-
-
-
-
     public List<Flashcard> getFlashcardsByFile(Long aiOutputId) {
         return flashcardRepository.findByFileId(aiOutputId);
     }

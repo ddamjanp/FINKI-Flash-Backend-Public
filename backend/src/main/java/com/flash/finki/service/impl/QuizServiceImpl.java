@@ -52,8 +52,6 @@ public class QuizServiceImpl implements QuizService {
         return quiz;
     }
 
-
-
     @Override
     public boolean quizAlreadyExists(Long fileId, Long userId) {
         return quizRepository.existsByUserIdAndFileId(userId,fileId);

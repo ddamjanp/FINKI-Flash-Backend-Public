@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class GenerateQuizRequestDTO {
+
     private Long fileId;
+
     private Long userId;
 }

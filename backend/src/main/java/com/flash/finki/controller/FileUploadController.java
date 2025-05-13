@@ -19,20 +19,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
 @RestController
 @RequestMapping("/files")
 @RequiredArgsConstructor
 public class FileUploadController {
 
-
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(FileUploadController.class);
 
     @Autowired
     private FlashcardService flashcardService;
-
 
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
@@ -92,9 +87,7 @@ public class FileUploadController {
             } catch (Exception e) {
                 log.error("Error generating flashcard for AIOutput:"+ output.getId(), e);
             }
-
         }
-
 
         return ResponseEntity.ok(response);
     }

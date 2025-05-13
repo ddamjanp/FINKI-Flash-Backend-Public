@@ -10,5 +10,4 @@ public interface DocumentProcessingService {
     public DocumentUploadResponse processUploadedText(File dbFile, String extractedString);
 
     public String extractTextFromPDF(InputStream inputStream);
-
 }

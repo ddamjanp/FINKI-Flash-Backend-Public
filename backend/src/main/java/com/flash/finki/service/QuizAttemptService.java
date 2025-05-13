@@ -1,7 +1,6 @@
 package com.flash.finki.service;
 
 import com.flash.finki.model.QuizAttempt;
-import com.flash.finki.model.QuizAttemptAnswer;
 import com.flash.finki.model.dto.QuizAttemptAnswerDTO;
 import com.flash.finki.model.dto.QuizAttemptDTO;
 import com.flash.finki.model.dto.QuizAttemptSummaryDTO;

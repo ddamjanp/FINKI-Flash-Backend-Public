@@ -21,7 +21,6 @@ public class Flashcard {
     @JoinColumn(name = "file_id", nullable = false)
     private File file;
 
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -38,7 +37,6 @@ public class Flashcard {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-
 
     public Flashcard(User user, AIOutput aiOutput, String question, String correctAnswer) {
         this.user = user;

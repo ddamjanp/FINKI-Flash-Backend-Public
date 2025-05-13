@@ -1,9 +1,5 @@
 package com.flash.finki.model.dto;
 
-import com.flash.finki.model.AIOutput;
-import com.flash.finki.model.File;
-import com.flash.finki.model.User;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -20,7 +16,6 @@ public class FlashcardDTO {
     private String correctAnswer;
 
     private LocalDateTime createdAt;
-
 }
 
 
