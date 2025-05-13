@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: finki-flash
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: finki-flash-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: finki-flash-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: finki-flash-db
+          property: password
+      - key: SUPPORT_EMAIL
+        sync: false
+      - key: APP_PASSWORD
+        sync: false
+      - key: PORT
+        value: 8080
+
+databases:
+  - name: finki-flash-db
+    plan: free 
