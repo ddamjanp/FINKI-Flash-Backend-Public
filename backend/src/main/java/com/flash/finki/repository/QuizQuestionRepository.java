@@ -1,7 +1,11 @@
 package com.flash.finki.repository;
 
-import com.flash.finki.model.QuizQuestion;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Long> {
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.flash.finki.model.QuizQuestion;
+
+public interface QuizQuestionRepository extends JpaRepository<QuizQuestion,Long> {
+    List<QuizQuestion> findAllBy(Pageable pageable);
 }
