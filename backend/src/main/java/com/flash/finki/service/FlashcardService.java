@@ -51,7 +51,7 @@ public class FlashcardService {
     }
 
     public List<FlashcardDTO> searchFlashcards(String query) {
-       List<Flashcard> flashcards = flashcardRepository.findByQuestionContainingIgnoreCase(query);
+        List<Flashcard> flashcards = flashcardRepository.findByQuestionContainingIgnoreCase(query);
         return flashcards.stream()
                 .map(flashcard -> new FlashcardDTO(
                         flashcard.getId(),
@@ -63,8 +63,18 @@ public class FlashcardService {
 
     }
 
-    public List<Flashcard> getFlashcardsByFile(Long aiOutputId) {
-        return flashcardRepository.findByFileId(aiOutputId);
+    public List<FlashcardDTO> getFlashcardsByFile(Long aiOutputId) {
+
+        List<Flashcard> flashcards = flashcardRepository.findByFileId(aiOutputId);
+
+        return flashcards.stream()
+                .map(flashcard -> new FlashcardDTO(
+                        flashcard.getId(),
+                        flashcard.getQuestion(),
+                        flashcard.getCorrectAnswer(),
+                        flashcard.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
     }
 
     public Flashcard getFlashcardById(Long id) {

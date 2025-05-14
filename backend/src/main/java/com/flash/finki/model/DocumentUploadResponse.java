@@ -13,5 +13,6 @@ public class DocumentUploadResponse {
 
     private int totalQuestions;
 
+    // TODO: AIOutputDTO
     private List<AIOutput> questions;
 }

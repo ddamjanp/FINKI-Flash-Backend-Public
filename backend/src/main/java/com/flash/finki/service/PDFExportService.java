@@ -40,14 +40,21 @@ public class PDFExportService {
 
                         doc.add(new Paragraph("Card " + (idx++)).setBold());
                         doc.add(new Paragraph(q.getAiOutput().getQuestion()));
-                        doc.add(new Paragraph("— flip for answer —").setItalic());
                         doc.add(new Paragraph("\n"));
 
                         doc.add(new Paragraph("Answer").setUnderline());
                         doc.add(new Paragraph(q.getAiOutput().getCorrectAnswer()));
-                        doc.add(new com.itextpdf.layout.element.AreaBreak());
+                        doc.add(new Paragraph("\n"));
+                        doc.add(new Paragraph("\n"));
                     } else {
                         doc.add(new Paragraph(idx + ". " + q.getAiOutput().getQuestion()));
+                        doc.add(new Paragraph("\n"));
+                        doc.add(new Paragraph(idx + ". " + q.getAiOutput().getCorrectAnswer()));
+                        doc.add(new Paragraph(idx + ". " + q.getAiOutput().getWrongAnswer1()));
+                        doc.add(new Paragraph(idx + ". " + q.getAiOutput().getWrongAnswer2()));
+                        doc.add(new Paragraph(idx + ". " + q.getAiOutput().getWrongAnswer3()));
+
+
                         doc.add(new Paragraph("\n\n\n"));  
                         idx++;
                     }
