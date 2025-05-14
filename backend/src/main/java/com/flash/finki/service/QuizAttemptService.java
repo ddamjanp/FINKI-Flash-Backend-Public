@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface QuizAttemptService {
 
-    public QuizAttempt startNewAttempt(Long quizId, Long userId);
+    QuizAttempt startNewAttempt(Long quizId, Long userId);
 
-    public List<QuizAttemptSummaryDTO> getAttemptsForQuiz(Long quizId, Long userId);
+    List<QuizAttemptSummaryDTO> getAttemptsForQuiz(Long quizId, Long userId);
 
-    public QuizAttemptDTO submitAttempt(Long attemptId, List<QuizAttemptAnswerDTO> submittedAnswers);
+    QuizAttemptDTO submitAttempt(Long attemptId, List<QuizAttemptAnswerDTO> submittedAnswers);
 }

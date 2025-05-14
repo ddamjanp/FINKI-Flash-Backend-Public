@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class QuizQuestionService {
     private final QuizQuestionRepository repo;
 
-    public List<QuizQuestion> findFirst5() {
-        return repo.findAllBy(PageRequest.of(0, 5));
+    public List<QuizQuestion> findByQuizId(Long quizId) {
+        return repo.findByQuizId(quizId);
     }
 }

@@ -27,8 +27,8 @@ public class FlashcardController {
     }
 
     @GetMapping("/file/{fileId}")
-    public ResponseEntity<List<Flashcard>> getFlashcardsByFile(@PathVariable Long fileId) {
-        List<Flashcard> flashcards = flashcardService.getFlashcardsByFile(fileId);
+    public ResponseEntity<List<FlashcardDTO>> getFlashcardsByFile(@PathVariable Long fileId) {
+        List<FlashcardDTO> flashcards = flashcardService.getFlashcardsByFile(fileId);
         return ResponseEntity.ok(flashcards);
     }
 

@@ -6,7 +6,6 @@ import com.flash.finki.repository.FileRepository;
 import com.flash.finki.repository.UserRepository;
 import com.flash.finki.service.DocumentProcessingService;
 import com.flash.finki.service.FlashcardService;
-import com.flash.finki.service.PDFTextExtractorService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ public class FileUploadController {
 
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
-    private final PDFTextExtractorService pdfExtractorService;
     private final DocumentProcessingService documentProcessingService;
 
     @PostMapping("/upload")
@@ -62,13 +60,14 @@ public class FileUploadController {
         return ResponseEntity.ok("File metadata saved successfully.");
     }
 
+    // TODO: change RequestParams
     @PostMapping("/process")
     public ResponseEntity<DocumentUploadResponse> processFile(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("filename") String filename) throws IOException {
+            @RequestParam("fileID") Long fileId) throws IOException {
 
         // For security
-        File dbFile = fileRepository.findByFilename(filename)
+        File dbFile = fileRepository.findById(fileId)
                 .orElseThrow(() -> new IllegalArgumentException("File not found in DB"));
 
         Long userId = dbFile.getUser().getId();
