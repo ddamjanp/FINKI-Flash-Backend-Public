@@ -1,7 +1,6 @@
 package com.flash.finki.controller;
 
 import com.flash.finki.model.AIOutput;
-import com.flash.finki.model.File;
 import com.flash.finki.service.AIOutputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

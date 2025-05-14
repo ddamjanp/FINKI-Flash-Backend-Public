@@ -6,7 +6,6 @@ import com.flash.finki.model.File;
 import com.flash.finki.repository.AIOutputRepository;
 import com.flash.finki.repository.FileRepository;
 import com.flash.finki.service.DocumentProcessingService;
-import com.flash.finki.service.PDFTextExtractorService;
 import com.flash.finki.service.QuestionGenerationService;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -24,8 +23,6 @@ public class DocumentProcessingServiceImpl implements DocumentProcessingService 
     private final QuestionGenerationService questionGenerationService;
     private final AIOutputRepository aiOutputRepository;
     private final FileRepository fileRepository;
-    private final PDFTextExtractorService pdfTextExtractorService;
-
 
     @Override
     public DocumentUploadResponse processUploadedText(File dbFile, String extractedString) {

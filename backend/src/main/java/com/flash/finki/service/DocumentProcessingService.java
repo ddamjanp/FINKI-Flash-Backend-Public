@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 public interface DocumentProcessingService {
 
-    public DocumentUploadResponse processUploadedText(File dbFile, String extractedString);
+    DocumentUploadResponse processUploadedText(File dbFile, String extractedString);
 
-    public String extractTextFromPDF(InputStream inputStream);
+    String extractTextFromPDF(InputStream inputStream);
 }

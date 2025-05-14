@@ -4,7 +4,7 @@ import com.flash.finki.model.Quiz;
 
 public interface QuizService {
 
-    public Quiz createQuizFromFile(Long fileId, Long userId);
+    Quiz createQuizFromFile(Long fileId, Long userId);
 
-    public boolean quizAlreadyExists(Long fileId, Long userId);
+    boolean quizAlreadyExists(Long fileId, Long userId);
 }
