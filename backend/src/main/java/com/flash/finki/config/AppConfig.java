@@ -66,8 +66,7 @@ public class AppConfig {
                 config.setAllowedOrigins(Arrays.asList(
                         "http://localhost:3000",
                         "http://localhost:8080",
-                        "https://finki-flash-frontend.onrender.com/"
-                        // TODO: Add the ULR when the frontend is deployed
+                        "https://finki-flash-frontend.onrender.com"
                 ));
                 config.setAllowedMethods(Collections.singletonList("*"));
                 config.setAllowCredentials(true);
@@ -85,4 +84,3 @@ public class AppConfig {
         return new BCryptPasswordEncoder();
     }
 }
-
