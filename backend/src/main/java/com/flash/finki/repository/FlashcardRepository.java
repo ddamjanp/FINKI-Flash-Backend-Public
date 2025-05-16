@@ -8,5 +8,6 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, Long> {
 
     List<Flashcard> findByQuestionContainingIgnoreCase(String query);
 
-    List<Flashcard> findByFileId(Long fileId);
+    List<Flashcard> findAllByFileId(Long fileId);
+
 }
