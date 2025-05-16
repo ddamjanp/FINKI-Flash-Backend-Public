@@ -66,7 +66,7 @@ public class FlashcardServiceImpl implements FlashcardService {
 
     public List<FlashcardDTO> getFlashcardsByFile(Long aiOutputId) {
 
-        List<Flashcard> flashcards = flashcardRepository.findByFileId(aiOutputId);
+        List<Flashcard> flashcards = flashcardRepository.findAllByFileId(aiOutputId);
 
         return flashcards.stream()
                 .map(flashcard -> new FlashcardDTO(
