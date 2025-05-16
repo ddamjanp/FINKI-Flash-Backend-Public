@@ -1,5 +1,6 @@
 package com.flash.finki.controller;
 
+import com.flash.finki.model.dto.FileUploadDTO;
 import com.flash.finki.service.FlashcardService;
 import org.slf4j.Logger;
 import com.flash.finki.model.*;
@@ -36,13 +37,13 @@ public class FileUploadController {
 
     @PostMapping("/upload")
     @Transactional
-    public ResponseEntity<String> uploadFile(
+    public ResponseEntity<FileUploadDTO> uploadFile(
             @RequestParam("file") MultipartFile file,
             @RequestParam("userId") Long userId) throws IOException {
 
         String fileName = file.getOriginalFilename();
         if (!isValidFileExtension(fileName)) {
-            return ResponseEntity.badRequest().body("Invalid file type");
+            return ResponseEntity.badRequest().body(new FileUploadDTO("Invalid file type. Only PDF, CSV, and TXT files are allowed.", null));
         }
 
         String sanitizedFileName = fileName.replaceAll("[^a-zA-Z0-9.-]", "_");
@@ -59,7 +60,7 @@ public class FileUploadController {
 
         fileRepository.save(dbFile);
 
-        return ResponseEntity.ok("File metadata saved successfully.");
+        return ResponseEntity.ok(new FileUploadDTO("File uploaded successfully", dbFile.getId()));
     }
 
     // TODO: change RequestParams
