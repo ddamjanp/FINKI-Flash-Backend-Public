@@ -6,8 +6,8 @@ import com.flash.finki.model.User;
 import com.flash.finki.repository.UserRepository;
 import com.flash.finki.request.LoginRequest;
 import com.flash.finki.response.AuthResponse;
+import com.flash.finki.service.UserService;
 import com.flash.finki.service.impl.CustomUserDetailsService;
-import com.flash.finki.service.impl.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -35,11 +35,11 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailsService customUserDetailsService;
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder,
             JwtTokenProvider jwtTokenProvider,
-            CustomUserDetailsService customUserDetailsService, UserServiceImpl userService) {
+            CustomUserDetailsService customUserDetailsService, UserService userService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;

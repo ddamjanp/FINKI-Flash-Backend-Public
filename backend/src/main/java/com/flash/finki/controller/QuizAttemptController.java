@@ -6,7 +6,6 @@ import com.flash.finki.model.dto.QuizAttemptDTO;
 import com.flash.finki.model.dto.QuizAttemptSummaryDTO;
 import com.flash.finki.model.dto.StartQuizAttemptRequestDTO;
 import com.flash.finki.service.QuizAttemptService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +13,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/quiz-attempts")
-@RequiredArgsConstructor
 public class QuizAttemptController {
+
     private final QuizAttemptService attemptService;
+
+    public QuizAttemptController(QuizAttemptService attemptService) {
+        this.attemptService = attemptService;
+    }
 
     @PostMapping("/start")
     public ResponseEntity<QuizAttempt> startAttempt(@RequestBody StartQuizAttemptRequestDTO request) {

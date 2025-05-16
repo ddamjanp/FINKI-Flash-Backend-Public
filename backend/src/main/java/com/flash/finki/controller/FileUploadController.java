@@ -1,14 +1,12 @@
 package com.flash.finki.controller;
 
+import com.flash.finki.service.FlashcardService;
 import org.slf4j.Logger;
 import com.flash.finki.model.*;
 import com.flash.finki.repository.FileRepository;
 import com.flash.finki.repository.UserRepository;
 import com.flash.finki.service.DocumentProcessingService;
-import com.flash.finki.service.FlashcardService;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,17 +18,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/files")
-@RequiredArgsConstructor
 public class FileUploadController {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(FileUploadController.class);
 
-    @Autowired
-    private FlashcardService flashcardService;
-
+    private final FlashcardService flashcardService;
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
     private final DocumentProcessingService documentProcessingService;
+
+    public FileUploadController(FlashcardService flashcardService, FileRepository fileRepository, UserRepository userRepository, DocumentProcessingService documentProcessingService) {
+        this.flashcardService = flashcardService;
+        this.fileRepository = fileRepository;
+        this.userRepository = userRepository;
+        this.documentProcessingService = documentProcessingService;
+    }
 
     @PostMapping("/upload")
     @Transactional

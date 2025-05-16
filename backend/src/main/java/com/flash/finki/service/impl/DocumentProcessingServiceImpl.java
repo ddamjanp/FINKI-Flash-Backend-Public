@@ -4,7 +4,6 @@ import com.flash.finki.model.AIOutput;
 import com.flash.finki.model.DocumentUploadResponse;
 import com.flash.finki.model.File;
 import com.flash.finki.repository.AIOutputRepository;
-import com.flash.finki.repository.FileRepository;
 import com.flash.finki.service.DocumentProcessingService;
 import com.flash.finki.service.QuestionGenerationService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ public class DocumentProcessingServiceImpl implements DocumentProcessingService 
 
     private final QuestionGenerationService questionGenerationService;
     private final AIOutputRepository aiOutputRepository;
-    private final FileRepository fileRepository;
 
     @Override
     public DocumentUploadResponse processUploadedText(File dbFile, String extractedString) {
