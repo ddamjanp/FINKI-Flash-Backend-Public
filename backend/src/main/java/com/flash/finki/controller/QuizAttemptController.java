@@ -32,8 +32,7 @@ public class QuizAttemptController {
     }
 
     @PostMapping("/{attemptId}/submit")
-    public ResponseEntity<QuizAttemptDTO> submitAttempt(@PathVariable Long attemptId,
-                                                        @RequestBody List<QuizAttemptAnswerDTO> answers) {
+    public ResponseEntity<QuizAttemptDTO> submitAttempt(@PathVariable Long attemptId, @RequestBody List<QuizAttemptAnswerDTO> answers) {
         return ResponseEntity.ok(attemptService.submitAttempt(attemptId, answers));
     }
 }
