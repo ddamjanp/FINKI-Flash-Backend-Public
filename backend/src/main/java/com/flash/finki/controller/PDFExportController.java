@@ -1,5 +1,6 @@
 package com.flash.finki.controller;
 
+import com.flash.finki.service.PDFExportService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,16 +13,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.flash.finki.service.PDFExportService;
-
-import lombok.RequiredArgsConstructor;
-
 @RestController
 @RequestMapping("/api/export")
-@RequiredArgsConstructor
 public class PDFExportController {
 
     private final PDFExportService pdfExportService;
+
+    public PDFExportController(PDFExportService pdfExportService) {
+        this.pdfExportService = pdfExportService;
+    }
 
     @GetMapping(value = "/quiz/{quizId}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<InputStreamResource> downloadQuiz(@PathVariable Long quizId) {
