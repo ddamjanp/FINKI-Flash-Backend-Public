@@ -65,7 +65,8 @@ public class AppConfig {
 
                 config.setAllowedOrigins(Arrays.asList(
                         "http://localhost:3000",
-                        "http://localhost:8080"
+                        "http://localhost:8080",
+                        "https://finki-flash-frontend.onrender.com/"
                         // TODO: Add the ULR when the frontend is deployed
                 ));
                 config.setAllowedMethods(Collections.singletonList("*"));
