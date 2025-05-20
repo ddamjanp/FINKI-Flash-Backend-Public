@@ -20,8 +20,10 @@ public class QuizAttemptController {
     private final AIOutputService aiOutputService;
     private final QuizQuestionRepository quizQuestionRepository;
 
-    public QuizAttemptController(QuizAttemptService attemptService) {
+    public QuizAttemptController(QuizAttemptService attemptService, AIOutputService aiOutputService, QuizQuestionRepository quizQuestionRepository) {
         this.attemptService = attemptService;
+        this.aiOutputService = aiOutputService;
+        this.quizQuestionRepository = quizQuestionRepository;
     }
 
     @PostMapping("/start")
