@@ -2,7 +2,6 @@ package com.flash.finki.controller;
 
 import com.flash.finki.model.File;
 import com.flash.finki.service.FileService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +11,11 @@ import java.util.List;
 @RequestMapping("/api/Lessons")
 public class LessonController {
 
-    @Autowired
-    private FileService fileService;
+    private final FileService fileService;
+
+    public LessonController(FileService fileService) {
+        this.fileService = fileService;
+    }
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<File>> getAllByUserId(@PathVariable Long userId) {

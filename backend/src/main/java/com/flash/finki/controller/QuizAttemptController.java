@@ -7,7 +7,6 @@ import com.flash.finki.model.dto.*;
 import com.flash.finki.repository.QuizQuestionRepository;
 import com.flash.finki.service.AIOutputService;
 import com.flash.finki.service.QuizAttemptService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +14,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/quiz-attempts")
-@RequiredArgsConstructor
 public class QuizAttemptController {
+
     private final QuizAttemptService attemptService;
     private final AIOutputService aiOutputService;
     private final QuizQuestionRepository quizQuestionRepository;
+
+    public QuizAttemptController(QuizAttemptService attemptService) {
+        this.attemptService = attemptService;
+    }
 
     @PostMapping("/start")
     public ResponseEntity<StartQuizAttemptResponseDTO> startAttempt(@RequestBody StartQuizAttemptRequestDTO request) {
@@ -49,8 +52,7 @@ public class QuizAttemptController {
     }
 
     @PostMapping("/{attemptId}/submit")
-    public ResponseEntity<QuizAttemptDTO> submitAttempt(@PathVariable Long attemptId,
-                                                        @RequestBody List<QuizAttemptAnswerDTO> answers) {
+    public ResponseEntity<QuizAttemptDTO> submitAttempt(@PathVariable Long attemptId, @RequestBody List<QuizAttemptAnswerDTO> answers) {
         return ResponseEntity.ok(attemptService.submitAttempt(attemptId, answers));
     }
 }

@@ -27,10 +27,5 @@ public class EmailServiceImpl implements EmailService {
 
         emailSender.send(message);
     }
-
-    @Override
-    public void sendVerificationEmail(String to, String subject, String text) throws MessagingException {
-        sendEmail(to, subject, text);
-    }
 }
 

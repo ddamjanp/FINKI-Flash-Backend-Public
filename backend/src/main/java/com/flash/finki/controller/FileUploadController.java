@@ -1,14 +1,13 @@
 package com.flash.finki.controller;
 
+import com.flash.finki.model.dto.FileUploadDTO;
+import com.flash.finki.service.FlashcardService;
 import org.slf4j.Logger;
 import com.flash.finki.model.*;
 import com.flash.finki.repository.FileRepository;
 import com.flash.finki.repository.UserRepository;
 import com.flash.finki.service.DocumentProcessingService;
-import com.flash.finki.service.FlashcardService;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,27 +19,31 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/files")
-@RequiredArgsConstructor
 public class FileUploadController {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(FileUploadController.class);
 
-    @Autowired
-    private FlashcardService flashcardService;
-
+    private final FlashcardService flashcardService;
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
     private final DocumentProcessingService documentProcessingService;
 
+    public FileUploadController(FlashcardService flashcardService, FileRepository fileRepository, UserRepository userRepository, DocumentProcessingService documentProcessingService) {
+        this.flashcardService = flashcardService;
+        this.fileRepository = fileRepository;
+        this.userRepository = userRepository;
+        this.documentProcessingService = documentProcessingService;
+    }
+
     @PostMapping("/upload")
     @Transactional
-    public ResponseEntity<String> uploadFile(
+    public ResponseEntity<FileUploadDTO> uploadFile(
             @RequestParam("file") MultipartFile file,
             @RequestParam("userId") Long userId) throws IOException {
 
         String fileName = file.getOriginalFilename();
         if (!isValidFileExtension(fileName)) {
-            return ResponseEntity.badRequest().body("Invalid file type");
+            return ResponseEntity.badRequest().body(new FileUploadDTO("Invalid file type. Only PDF, CSV, and TXT files are allowed.", null));
         }
 
         String sanitizedFileName = fileName.replaceAll("[^a-zA-Z0-9.-]", "_");
@@ -57,7 +60,7 @@ public class FileUploadController {
 
         fileRepository.save(dbFile);
 
-        return ResponseEntity.ok("File metadata saved successfully.");
+        return ResponseEntity.ok(new FileUploadDTO("File uploaded successfully", dbFile.getId()));
     }
 
     // TODO: change RequestParams
