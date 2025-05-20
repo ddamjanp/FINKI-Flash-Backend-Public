@@ -8,4 +8,6 @@ import com.flash.finki.model.QuizQuestion;
 public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Long> {
 
     List<QuizQuestion> findByQuizId(Long quizId);
+
+    List<QuizQuestion> findAllByQuizId(Long id);
 }

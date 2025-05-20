@@ -28,7 +28,6 @@ public class Flashcard {
     @ManyToOne
     @JoinColumn(name = "ai_output_id", nullable = false)
     private AIOutput aiOutput;
-
     @Column(nullable = false)
     private String question;
 
