@@ -11,4 +11,6 @@ public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Long
     List<QuizQuestion> findAllBy(Pageable pageable);
 
     List<QuizQuestion> findByQuizId(Long quizId);
+
+    List<QuizQuestion> findAllByQuizId(Long id);
 }
